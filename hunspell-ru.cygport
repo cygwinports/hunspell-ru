@@ -1,0 +1,35 @@
+NAME="hunspell-ru"
+VERSION=0.4.5
+RELEASE=1
+CATEGORY="Text"
+SUMMARY="Russian dictionary for Hunspell"
+DESCRIPTION="Hunspell is a spell checker and morphological analyzer library and
+program designed for languages with rich morphology and complex compounding or
+character encoding.
+This package provides a Russian dictionary for Hunspell."
+HOMEPAGE="http://scon155.phys.msu.su/eng/lebedev.html"
+SRC_URI="https://addons.mozilla.org/firefox/downloads/file/218216/addon-${VERSION}-an+fx+tb+fn+sm.xpi"
+SRC_DIR=.
+
+ARCH=noarch
+
+CYGPORT_USE_UNSTABLE_API=1
+src_unpack_hook() {
+	check_prog_req unzip
+	unzip ${SRC_URI##*/}
+}
+
+src_compile() { :; }
+
+src_install() {
+	cd ${S}
+	insinto /usr/share/myspell
+	newins dictionaries/ru.aff ru_RU.aff
+	newins dictionaries/ru.dic ru_RU.dic
+
+	for l in ru_UA
+	do
+		dosym ru_RU.aff /usr/share/myspell/$l.aff
+		dosym ru_RU.dic /usr/share/myspell/$l.dic
+	done
+}
